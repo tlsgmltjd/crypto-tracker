@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 
@@ -36,7 +37,7 @@ interface RouterState {
   };
 }
 
-export const Coin = () => {
+export const Coin: React.FC = () => {
   const { coinId } = useParams<Params>();
   const [loading, setLoading] = useState(true);
 
@@ -44,6 +45,27 @@ export const Coin = () => {
   // <Link to="/123" state={{ name: "Hello" }}> <- state를 전송
   // const location = useLocation() <- 전송한 state를 받아옴
   const { state } = useLocation() as RouterState;
+
+  const [info, setInfo] = useState({});
+  const [price, setPrice] = useState({});
+
+  async function getData() {
+    const coinInfo = await axios(
+      `https://api.coinpaprika.com/v1/coins/${coinId}`
+    );
+    const coinPrice = await axios(
+      `https://api.coinpaprika.com/v1/tickers/${coinId}`
+    );
+
+    setInfo(coinInfo);
+    setPrice(coinPrice);
+
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <Container>
