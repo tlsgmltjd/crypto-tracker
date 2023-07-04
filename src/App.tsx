@@ -1,6 +1,9 @@
 import { createGlobalStyle } from "styled-components";
 import { Router } from "./routes/Router";
 
+// ReactQuery DevTool - 이거 쓰면 캐시에 있는 query를 볼 수 있음
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 // reset css
 const GlobalStyle = createGlobalStyle`
 html, body, div, span, applet, object, iframe,
@@ -69,6 +72,7 @@ function App() {
     <>
       <GlobalStyle />
       <Router />
+      <ReactQueryDevtools />
     </>
   );
 }

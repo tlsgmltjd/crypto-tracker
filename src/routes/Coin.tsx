@@ -11,10 +11,11 @@ import {
 import { styled } from "styled-components";
 import { Price } from "./Price";
 import { Chart } from "./Chart";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
 const Container = styled.div`
   padding: 0 20px;
-
   max-width: 480px;
   margin: 0 auto;
 `;
@@ -154,48 +155,33 @@ interface IPriceData {
 
 export const Coin: React.FC = () => {
   const { coinId } = useParams<Params>();
-  const [loading, setLoading] = useState(true);
 
   // page끼리 데이터를 주고 받아야하는 경우
   // <Link to="/123" state={{ name: "Hello" }}> <- state를 전송
   // const location = useLocation() <- 전송한 state를 받아옴
   const { state } = useLocation() as RouterState;
 
-  const [info, setInfo] = useState<IInfoData>();
-  const [price, setPrice] = useState<IPriceData>();
-
   // useMatch()의 인자로 url을 넘기면 해당 url과 일치할 경우 url의 정보를 반환하고, 일치하지 않을 경우 null을 반환한다.
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
 
-  console.log(priceMatch);
-  console.log(chartMatch);
+  const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId!)
+    // ! : 확장 할당 어션셜로 값이 무조건 할당되어있다고 컴파일러에게 전달해 값이 없어도 변수를 사용할 수 있게 한다.
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(
+    ["tickers", coinId],
+    () => fetchCoinTickers(coinId!)
+  );
 
-  async function getData() {
-    const coinInfo = await axios(
-      `https://api.coinpaprika.com/v1/coins/${coinId}`
-    );
-    const coinPrice = await axios(
-      `https://api.coinpaprika.com/v1/tickers/${coinId}`
-    );
-
-    setInfo(coinInfo.data);
-    setPrice(coinPrice.data);
-
-    console.log(coinInfo.data);
-
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    getData();
-  }, [coinId]);
+  const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
       <Header>
         <Title>
-          {state ? state.name : loading ? "Loading..." : info?.name}
+          {state ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -206,28 +192,28 @@ export const Coin: React.FC = () => {
             <CoinInfoBox>
               <CoinInfo>
                 <CoinInfoTitle>RANK</CoinInfoTitle>
-                <CoinInfoValue>{info?.rank}</CoinInfoValue>
+                <CoinInfoValue>{infoData?.rank}</CoinInfoValue>
               </CoinInfo>
               <CoinInfo>
                 <CoinInfoTitle>SYMBOL</CoinInfoTitle>
-                <CoinInfoValue>{info?.symbol}</CoinInfoValue>
+                <CoinInfoValue>{infoData?.symbol}</CoinInfoValue>
               </CoinInfo>
               <CoinInfo>
                 <CoinInfoTitle>OPEN SOURCE</CoinInfoTitle>
                 <CoinInfoValue>
-                  {info?.open_source ? "YES" : "NO"}
+                  {infoData?.open_source ? "YES" : "NO"}
                 </CoinInfoValue>
               </CoinInfo>
             </CoinInfoBox>
-            <Decription>{info?.description}</Decription>
+            <Decription>{infoData?.description}</Decription>
             <CoinInfoBox>
               <CoinInfo>
                 <CoinInfoTitle>TOTAL SUPPLY</CoinInfoTitle>
-                <CoinInfoValue>{price?.total_supply}</CoinInfoValue>
+                <CoinInfoValue>{tickersData?.total_supply}</CoinInfoValue>
               </CoinInfo>
               <CoinInfo>
                 <CoinInfoTitle>MAX SUPPLY</CoinInfoTitle>
-                <CoinInfoValue>{price?.max_supply}</CoinInfoValue>
+                <CoinInfoValue>{tickersData?.max_supply}</CoinInfoValue>
               </CoinInfo>
             </CoinInfoBox>
 
