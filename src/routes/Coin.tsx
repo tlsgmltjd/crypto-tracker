@@ -1,7 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 import { styled } from "styled-components";
+import { Price } from "./Price";
+import { Chart } from "./Chart";
 
 const Container = styled.div`
   padding: 0 20px;
@@ -194,6 +202,10 @@ export const Coin: React.FC = () => {
                 <CoinInfoValue>{price?.max_supply}</CoinInfoValue>
               </CoinInfo>
             </CoinInfoBox>
+            <Routes>
+              <Route path={`price`} element={<Price />} />
+              <Route path={`chart`} element={<Chart />} />
+            </Routes>
           </MainContainer>
         </>
       )}
