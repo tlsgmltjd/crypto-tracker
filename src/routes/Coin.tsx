@@ -27,6 +27,38 @@ const Loader = styled.span`
   display: block;
 `;
 
+const MainContainer = styled.main``;
+
+const CoinInfoBox = styled.div`
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  border-radius: 8px;
+`;
+
+const CoinInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const CoinInfoTitle = styled.div`
+  font-weight: 100;
+  font-size: 0.8em;
+`;
+
+const CoinInfoValue = styled.div`
+  margin-top: 2px;
+  font-size: 1.5em;
+`;
+
+const Decription = styled.p`
+  padding: 15px;
+  line-height: 23px;
+`;
+
 type Params = {
   coinId: string;
 };
@@ -116,21 +148,55 @@ export const Coin: React.FC = () => {
     setInfo(coinInfo.data);
     setPrice(coinPrice.data);
 
-    console.log(coinPrice.data);
+    console.log(coinInfo.data);
 
     setLoading(false);
   }
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [coinId]);
 
   return (
     <Container>
       <Header>
         <Title>{state ? state.name : "Loading..."}</Title>
       </Header>
-      {loading ? <Loader>Loading...</Loader> : null}
+      {loading ? (
+        <Loader>Loading...</Loader>
+      ) : (
+        <>
+          <MainContainer>
+            <CoinInfoBox>
+              <CoinInfo>
+                <CoinInfoTitle>RANK</CoinInfoTitle>
+                <CoinInfoValue>{info?.rank}</CoinInfoValue>
+              </CoinInfo>
+              <CoinInfo>
+                <CoinInfoTitle>SYMBOL</CoinInfoTitle>
+                <CoinInfoValue>{info?.symbol}</CoinInfoValue>
+              </CoinInfo>
+              <CoinInfo>
+                <CoinInfoTitle>OPEN SOURCE</CoinInfoTitle>
+                <CoinInfoValue>
+                  {info?.open_source ? "YES" : "NO"}
+                </CoinInfoValue>
+              </CoinInfo>
+            </CoinInfoBox>
+            <Decription>{info?.description}</Decription>
+            <CoinInfoBox>
+              <CoinInfo>
+                <CoinInfoTitle>TOTAL SUPPLY</CoinInfoTitle>
+                <CoinInfoValue>{price?.total_supply}</CoinInfoValue>
+              </CoinInfo>
+              <CoinInfo>
+                <CoinInfoTitle>MAX SUPPLY</CoinInfoTitle>
+                <CoinInfoValue>{price?.max_supply}</CoinInfoValue>
+              </CoinInfo>
+            </CoinInfoBox>
+          </MainContainer>
+        </>
+      )}
     </Container>
   );
 };
