@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
-  BrowserRouter,
+  Link,
   Route,
   Routes,
   useLocation,
+  useMatch,
   useParams,
 } from "react-router-dom";
 import { styled } from "styled-components";
@@ -65,6 +66,24 @@ const CoinInfoValue = styled.div`
 const Decription = styled.p`
   padding: 15px;
   line-height: 23px;
+`;
+
+const TabBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 10px;
+  margin: 25px 0;
+`;
+
+const TabBtn = styled.button<{ isActive: boolean }>`
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+
+  color: ${(props) =>
+    props.isActive ? props.theme.accentColor : props.theme.textColor};
 `;
 
 type Params = {
@@ -145,6 +164,13 @@ export const Coin: React.FC = () => {
   const [info, setInfo] = useState<IInfoData>();
   const [price, setPrice] = useState<IPriceData>();
 
+  // useMatch()의 인자로 url을 넘기면 해당 url과 일치할 경우 url의 정보를 반환하고, 일치하지 않을 경우 null을 반환한다.
+  const priceMatch = useMatch("/:coinId/price");
+  const chartMatch = useMatch("/:coinId/chart");
+
+  console.log(priceMatch);
+  console.log(chartMatch);
+
   async function getData() {
     const coinInfo = await axios(
       `https://api.coinpaprika.com/v1/coins/${coinId}`
@@ -168,7 +194,9 @@ export const Coin: React.FC = () => {
   return (
     <Container>
       <Header>
-        <Title>{state ? state.name : "Loading..."}</Title>
+        <Title>
+          {state ? state.name : loading ? "Loading..." : info?.name}
+        </Title>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
@@ -202,6 +230,16 @@ export const Coin: React.FC = () => {
                 <CoinInfoValue>{price?.max_supply}</CoinInfoValue>
               </CoinInfo>
             </CoinInfoBox>
+
+            <TabBox>
+              <TabBtn isActive={chartMatch !== null}>
+                <Link to={`/${coinId}/chart`}>Chart</Link>
+              </TabBtn>
+              <TabBtn isActive={priceMatch !== null}>
+                <Link to={`/${coinId}/price`}>Price</Link>
+              </TabBtn>
+            </TabBox>
+
             <Routes>
               <Route path={`price`} element={<Price />} />
               <Route path={`chart`} element={<Chart />} />
