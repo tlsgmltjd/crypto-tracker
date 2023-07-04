@@ -66,6 +66,8 @@ interface ICoin {
 }
 
 export const Coins = () => {
+  // const { isLoading, data } = useQuery(["고유한 키값"], fetcher);
+  // query의 고유한 키 값을 넘겨준다. -> 캐시 시스템에서 저장되고 불러오기 위해 고유한 값을 넘겨줌
   const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins, {
     select: (data) => data.slice(0, 30),
   });

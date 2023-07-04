@@ -1,7 +1,7 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Link,
+  Outlet,
   Route,
   Routes,
   useLocation,
@@ -225,11 +225,7 @@ export const Coin: React.FC = () => {
                 <Link to={`/${coinId}/price`}>Price</Link>
               </TabBtn>
             </TabBox>
-
-            <Routes>
-              <Route path={`price`} element={<Price />} />
-              <Route path={`chart`} element={<Chart />} />
-            </Routes>
+            <Outlet />
           </MainContainer>
         </>
       )}
