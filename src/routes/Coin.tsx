@@ -4,6 +4,7 @@ import {
   Outlet,
   useLocation,
   useMatch,
+  useNavigate,
   useParams,
 } from "react-router-dom";
 import { styled } from "styled-components";
@@ -21,6 +22,7 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
 const Title = styled.h1`
@@ -81,6 +83,22 @@ const TabBtn = styled.button<{ isActive: boolean }>`
 
   color: ${(props) =>
     props.isActive ? props.theme.accentColor : props.theme.textColor};
+`;
+
+const BackBtn = styled.button`
+  background: rgba(0, 0, 0, 0.5);
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: ${(props) => props.theme.accentColor};
+  position: absolute;
+  left: 0;
+  cursor: pointer;
+
+  &:hover {
+    color: ${(props) => props.theme.textColor};
+    transition: all 0.2s ease-in;
+  }
 `;
 
 type Params = {
@@ -161,6 +179,8 @@ export const Coin: React.FC = () => {
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
 
+  const navigate = useNavigate();
+
   const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
     ["info", coinId],
     () => fetchCoinInfo(coinId!)
@@ -168,14 +188,22 @@ export const Coin: React.FC = () => {
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(
     ["tickers", coinId],
-    () => fetchCoinTickers(coinId!)
+    () => fetchCoinTickers(coinId!),
+    {
+      refetchInterval: 1000,
+    }
   );
 
   const loading = infoLoading || tickersLoading;
 
+  const onBackClick = () => {
+    navigate("/");
+  };
+
   return (
     <Container>
       <Header>
+        <BackBtn onClick={onBackClick}>⬅</BackBtn>
         <Title>
           {state ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
@@ -195,9 +223,9 @@ export const Coin: React.FC = () => {
                 <CoinInfoValue>{infoData?.symbol}</CoinInfoValue>
               </CoinInfo>
               <CoinInfo>
-                <CoinInfoTitle>OPEN SOURCE</CoinInfoTitle>
+                <CoinInfoTitle>Price</CoinInfoTitle>
                 <CoinInfoValue>
-                  {infoData?.open_source ? "YES" : "NO"}
+                  {tickersData?.quotes.USD.price.toFixed(2) + "$"}
                 </CoinInfoValue>
               </CoinInfo>
             </CoinInfoBox>
