@@ -34,7 +34,7 @@ export const Chart = () => {
           series={[
             {
               name: "Price",
-              data: data?.map((price) => Number(price.close)),
+              data: data?.map((price) => Number(price.close))!,
             },
           ]}
           options={{
