@@ -2,15 +2,11 @@ import React from "react";
 import {
   Link,
   Outlet,
-  Route,
-  Routes,
   useLocation,
   useMatch,
   useParams,
 } from "react-router-dom";
 import { styled } from "styled-components";
-import { Price } from "./Price";
-import { Chart } from "./Chart";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
@@ -225,7 +221,7 @@ export const Coin: React.FC = () => {
                 <Link to={`/${coinId}/price`}>Price</Link>
               </TabBtn>
             </TabBox>
-            <Outlet />
+            <Outlet context={{ coinId }} />
           </MainContainer>
         </>
       )}

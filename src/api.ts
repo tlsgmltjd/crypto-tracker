@@ -16,3 +16,10 @@ export async function fetchCoinTickers(coinId: string) {
   const respones = await axios(`${BASE_URL}/tickers/${coinId}`);
   return respones.data;
 }
+
+export async function fetchCoinHistory(coinId: string) {
+  const respones = await axios(
+    `https://ohlcv-api.nomadcoders.workers.dev?coinId=${coinId}`
+  );
+  return respones.data;
+}
