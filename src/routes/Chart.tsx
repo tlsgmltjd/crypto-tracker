@@ -23,9 +23,9 @@ export const Chart = () => {
   const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () =>
     fetchCoinHistory(coinId)
   );
-  console.log(data);
+
   return (
-    <h1>
+    <div>
       {isLoading ? (
         "Loading chart..."
       ) : (
@@ -34,7 +34,7 @@ export const Chart = () => {
           series={[
             {
               name: "Price",
-              data: data?.map((price) => price.close),
+              data: data?.map((price) => Number(price.close)),
             },
           ]}
           options={{
@@ -69,10 +69,25 @@ export const Chart = () => {
               labels: {
                 show: false,
               },
+              type: "datetime",
+              categories: data?.map((price) => price.time_close * 1000),
+            },
+            fill: {
+              type: "gradient",
+              gradient: {
+                gradientToColors: ["#0be881"],
+                stops: [0, 100],
+              },
+            },
+            colors: ["#0fbcf9"],
+            tooltip: {
+              y: {
+                formatter: (value) => `${value.toFixed(2)}`,
+              },
             },
           }}
         ></ApexChart>
       )}
-    </h1>
+    </div>
   );
 };
