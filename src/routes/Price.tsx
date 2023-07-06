@@ -1,3 +1,6 @@
+import { useOutletContext } from "react-router-dom";
+
 export const Price = () => {
-  return <h1>Price</h1>;
+  const { coinId } = useOutletContext();
+  return <h1>{coinId}</h1>;
 };
