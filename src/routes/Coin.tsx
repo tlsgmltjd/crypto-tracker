@@ -19,6 +19,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
+  margin: 20px 0 20px 0;
   height: 10vh;
   display: flex;
   justify-content: center;

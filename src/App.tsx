@@ -1,8 +1,11 @@
 import { createGlobalStyle } from "styled-components";
 import { Router } from "./routes/Router";
+import { ThemeProvider } from "styled-components";
+import { darkTheme, lightTheme } from "./theme.ts";
 
 // ReactQuery DevTool - 이거 쓰면 캐시에 있는 query를 볼 수 있음
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useState } from "react";
 
 // reset css
 const GlobalStyle = createGlobalStyle`
@@ -68,11 +71,17 @@ a {
 `;
 
 function App() {
+  const [isDark, setIsDark] = useState(true);
+  const toggleTheme = () => setIsDark((current) => !current);
+
   return (
     <>
-      <GlobalStyle />
-      <Router />
-      <ReactQueryDevtools />
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <button onClick={toggleTheme}>Toggle</button>
+        <GlobalStyle />
+        <Router />
+        <ReactQueryDevtools />
+      </ThemeProvider>
     </>
   );
 }

@@ -6,12 +6,12 @@ import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0 20px;
-
   max-width: 480px;
   margin: 0 auto;
 `;
 
 const Header = styled.header`
+  margin: 20px 0 20px 0;
   height: 10vh;
   display: flex;
   justify-content: center;
@@ -22,7 +22,7 @@ const CoinList = styled.ul``;
 
 const Coin = styled.li`
   background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.textColor};
   margin-bottom: 10px;
   border-radius: 15px;
 
