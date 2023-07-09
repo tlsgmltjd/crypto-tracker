@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0 20px;
@@ -76,6 +77,9 @@ export const Coins = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>Coins</title>
+      </Helmet>
       <Header>
         <Title>Coins</Title>
       </Header>

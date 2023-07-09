@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import {
   Link,
   Outlet,
@@ -7,7 +8,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
@@ -190,7 +191,7 @@ export const Coin: React.FC = () => {
     ["tickers", coinId],
     () => fetchCoinTickers(coinId!),
     {
-      refetchInterval: 1000,
+      refetchInterval: 5000,
     }
   );
 
@@ -202,6 +203,11 @@ export const Coin: React.FC = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state ? state.name : loading ? "Loading..." : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
         <BackBtn onClick={onBackClick}>⬅</BackBtn>
         <Title>
