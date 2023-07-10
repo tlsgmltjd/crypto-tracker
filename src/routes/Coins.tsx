@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
@@ -18,6 +18,7 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
 const CoinList = styled.ul``;
@@ -58,6 +59,17 @@ const Img = styled.img`
   margin-right: 10px;
 `;
 
+const ThemeToggleBtn = styled.button`
+  border: 1px solid ${(props) => props.theme.textColor};
+  border-radius: 8px;
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.textColor};
+  padding: 10px 13px;
+  position: absolute;
+  right: 5px;
+  transition: all 0.3s ease-in;
+`;
+
 interface ICoin {
   id: string;
   name: string;
@@ -79,6 +91,7 @@ export const Coins = ({}: ICoinsProps) => {
 
   console.log(isLoading, data);
 
+  const isDark = useRecoilValue(isDarkAtom);
   const setIsDarkAtom = useSetRecoilState(isDarkAtom);
   const toggleTheme = () => {
     setIsDarkAtom((prev) => !prev);
@@ -91,7 +104,9 @@ export const Coins = ({}: ICoinsProps) => {
       </Helmet>
       <Header>
         <Title>Coins</Title>
-        <button onClick={toggleTheme}>Toggle Button</button>
+        <ThemeToggleBtn onClick={toggleTheme}>
+          {isDark ? "🌚" : "🌝"}
+        </ThemeToggleBtn>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
