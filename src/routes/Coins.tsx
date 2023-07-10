@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0 20px;
@@ -66,11 +68,9 @@ interface ICoin {
   type: string;
 }
 
-interface ICoinsProps {
-  toggleTheme: () => void;
-}
+interface ICoinsProps {}
 
-export const Coins = ({ toggleTheme }: ICoinsProps) => {
+export const Coins = ({}: ICoinsProps) => {
   // const { isLoading, data } = useQuery(["고유한 키값"], fetcher);
   // query의 고유한 키 값을 넘겨준다. -> 캐시 시스템에서 저장되고 불러오기 위해 고유한 값을 넘겨줌
   const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins, {
@@ -79,6 +79,11 @@ export const Coins = ({ toggleTheme }: ICoinsProps) => {
 
   console.log(isLoading, data);
 
+  const setIsDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleTheme = () => {
+    setIsDarkAtom((prev) => !prev);
+  };
+
   return (
     <Container>
       <Helmet>
@@ -86,7 +91,7 @@ export const Coins = ({ toggleTheme }: ICoinsProps) => {
       </Helmet>
       <Header>
         <Title>Coins</Title>
-        <button onClick={toggleTheme}>Toggle</button>
+        <button onClick={toggleTheme}>Toggle Button</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>

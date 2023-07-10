@@ -5,7 +5,8 @@ import { darkTheme, lightTheme } from "./theme.ts";
 
 // ReactQuery DevTool - 이거 쓰면 캐시에 있는 query를 볼 수 있음
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "./atoms.ts";
 
 // reset css
 const GlobalStyle = createGlobalStyle`
@@ -71,15 +72,13 @@ a {
 `;
 
 function App() {
-  const [isDark, setIsDark] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const toggleTheme = () => setIsDark((current) => !current);
+  const isDark = useRecoilValue(isDarkAtom);
 
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <GlobalStyle />
-        <Router isDark={isDark} toggleTheme={toggleTheme} />
+        <Router />
         <ReactQueryDevtools />
       </ThemeProvider>
     </>
@@ -89,5 +88,8 @@ function App() {
 // App(isDark, toggleTheme)
 // -> Router -> Coins (toggleTheme)
 // -> Router -> Chart (isDark)
+
+// Recoil을 사용하여
+// atom을 만들어 하위 컴포넌트에서 atom에 접근하여 값을 불러오고 수정하게 만들었다.
 
 export default App;

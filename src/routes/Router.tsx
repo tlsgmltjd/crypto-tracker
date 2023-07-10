@@ -4,19 +4,16 @@ import { Coin } from "./Coin";
 import { Price } from "./Price";
 import { Chart } from "./Chart";
 
-interface IRouterProps {
-  toggleTheme: () => void;
-  isDark: boolean;
-}
+interface IRouterProps {}
 
-export const Router = ({ toggleTheme, isDark }: IRouterProps) => {
+export const Router = ({}: IRouterProps) => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Coins toggleTheme={toggleTheme} />} />
+        <Route path="/" element={<Coins />} />
         <Route path="/:coinId/*" element={<Coin />}>
           <Route path={`price`} element={<Price />} />
-          <Route path={`chart`} element={<Chart isDark={isDark} />} />
+          <Route path={`chart`} element={<Chart />} />
         </Route>
       </Routes>
     </BrowserRouter>
