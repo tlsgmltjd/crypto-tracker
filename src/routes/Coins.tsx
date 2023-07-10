@@ -21,10 +21,10 @@ const Header = styled.header`
 const CoinList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: white;
   color: ${(props) => props.theme.textColor};
   margin-bottom: 10px;
   border-radius: 15px;
+  border: 1px solid ${(props) => props.theme.textColor};
 
   a {
     display: flex;
@@ -66,7 +66,11 @@ interface ICoin {
   type: string;
 }
 
-export const Coins = () => {
+interface ICoinsProps {
+  toggleTheme: () => void;
+}
+
+export const Coins = ({ toggleTheme }: ICoinsProps) => {
   // const { isLoading, data } = useQuery(["고유한 키값"], fetcher);
   // query의 고유한 키 값을 넘겨준다. -> 캐시 시스템에서 저장되고 불러오기 위해 고유한 값을 넘겨줌
   const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins, {
@@ -82,6 +86,7 @@ export const Coins = () => {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <button onClick={toggleTheme}>Toggle</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>

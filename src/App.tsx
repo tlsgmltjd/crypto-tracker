@@ -72,18 +72,22 @@ a {
 
 function App() {
   const [isDark, setIsDark] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const toggleTheme = () => setIsDark((current) => !current);
 
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <button onClick={toggleTheme}>Toggle</button>
         <GlobalStyle />
-        <Router />
+        <Router isDark={isDark} toggleTheme={toggleTheme} />
         <ReactQueryDevtools />
       </ThemeProvider>
     </>
   );
 }
+
+// App(isDark, toggleTheme)
+// -> Router -> Coins (toggleTheme)
+// -> Router -> Chart (isDark)
 
 export default App;
