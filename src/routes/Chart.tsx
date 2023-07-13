@@ -17,9 +17,7 @@ interface IHistorical {
   market_cap: number;
 }
 
-interface IChartProps {}
-
-export const Chart = ({}: IChartProps) => {
+export const Chart = ({}) => {
   const { coinId } = useOutletContext<IParams>();
   const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () =>
     fetchCoinHistory(coinId)
